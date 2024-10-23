@@ -22,7 +22,7 @@ export const Home = () => {
         })
         .then((data) => {
           console.log(data); // Log the data to see its structure
-          setContacts(data.contacts || data.data.contacts || []); 
+          setContacts(data.contacts || data.data.contacts || []);
           setLoading(false); // Set loading to false after fetching data
         })
         .catch((err) => {
@@ -38,7 +38,7 @@ export const Home = () => {
   const handleDelete = (id) => {
     // Call the delete action from your context or a direct fetch request
     actions.deleteContact(id); // Make sure you have this action defined in your flux.js
-    setContacts(contacts.filter(contact => contact.id !== id)); // Update local state after deletion
+    setContacts(contacts.filter((contact) => contact.id !== id)); // Update local state after deletion
   };
 
   if (loading) {
@@ -52,13 +52,15 @@ export const Home = () => {
   return (
     <div className="text-center mt-5">
       <h1>Contact List</h1>
-      <Link to="/AddContact" className="btn btn-primary mb-3">Add New Contact</Link>
+      <Link to="/AddContact" className="btn btn-primary mb-3">
+        Add New Contact
+      </Link>
       <div className="row">
         {contacts.length > 0 ? (
           contacts.map((contact) => (
-            <ContactCard 
-              key={contact.id} 
-              contact={contact} 
+            <ContactCard
+              key={contact.id}
+              contact={contact}
               onDelete={handleDelete} // Pass the delete handler
             />
           ))
