@@ -14,25 +14,32 @@ const UpdateContact = () => {
     address: "",
   });
 
+  const [error, setError] = useState(null);
+
   useEffect(() => {
-    const fetchContact = () => {
-      const existingContact = store.contacts.find((c) => c.id === parseInt(id)); // Find the contact by ID
-      if (existingContact) {
-        setContact(existingContact); // Set state with the existing contact's data
-      }
-    };
-    fetchContact();
+    const existingContact = store.contacts.find((c) => c.id === parseInt(id));
+    if (existingContact) {
+      setContact(existingContact);
+    } else {
+      setError("Contact not found.");
+    }
   }, [id, store.contacts]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setContact({ ...contact, [name]: value }); // Update form state
+    setContact({ ...contact, [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    actions.updateContact(contact); // Call updateContact action
-    navigate("/"); // Redirect to home after update
+    actions.updateContact(contact.id, contact)
+      .then(() => {
+        navigate("/");
+      })
+      .catch((err) => {
+        console.error("Update failed:", err);
+        setError("Failed to update contact. Please try again.");
+      });
   };
 
   return (

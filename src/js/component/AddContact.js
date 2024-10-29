@@ -1,23 +1,54 @@
-import React, { useState } from "react";
-import { useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../store/appContext"; // Adjust the path as necessary
 import { useNavigate } from "react-router-dom";
 
 const AddContact = () => {
-  const { actions } = useContext(Context);
+  const { store, actions } = useContext(Context);
   const navigate = useNavigate();
-  
+  const [contacts, setContacts] = useState([]);
   const [contact, setContact] = useState({ full_name: "", email: "", phone: "", address: "" });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  useEffect(() => {
+    const fetchContacts = () => {
+      fetch("https://playground.4geeks.com/contact/agendas/Joaquin95/contacts")
+        .then((response) => {
+          if (!response.ok) {
+            setError("Network response was not ok");
+            setLoading(false);
+            return;
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data) {
+            console.log("Fetched data:", data);
+            setContacts(data.contacts || data.data?.contacts || []);
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error("Failed to fetch contacts:", err);
+          setError(err.message);
+          setLoading(false);
+        });
+    };
+
+    fetchContacts();
+  }, []);
 
   const handleChange = (e) => {
     setContact({ ...contact, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    await actions.addContact(contact); // Add contact using actions from context
-    navigate("/"); // Redirect back to home page after adding the contact
+    // Implement the action to add a contact here
+    console.log("Contact added:", contact);
+    navigate("/contacts"); // Redirect to contacts list after adding
   };
+
 
   return (
     <form onSubmit={handleSubmit}>

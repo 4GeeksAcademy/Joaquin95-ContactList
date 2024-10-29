@@ -1,13 +1,17 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Context } from "../store/appContext"; // Adjust the import path as necessary
+import { Context } from "../store/appContext"; 
 import { Link } from "react-router-dom";
-import ContactCard from "../component/ContactCard"; // Import the ContactCard component
+import ContactCard from "../component/ContactCard";
+import AddContact from "../component/AddContact";
 
 export const Home = () => {
-  const { actions } = useContext(Context);
   const [contacts, setContacts] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { actions } = useContext(Context);
+
+  useEffect(() => {
+    actions.getContacts();
+}, [actions]);
 
   useEffect(() => {
     const fetchContacts = () => {
@@ -15,20 +19,17 @@ export const Home = () => {
         .then((response) => {
           if (!response.ok) {
             setError("Network response was not ok");
-            setLoading(false);
-            return; // Exit early if the response is not OK
+            return null;  // Return null if response is not ok to avoid chaining further
           }
           return response.json();
         })
         .then((data) => {
-          console.log(data); // Log the data to see its structure
-          setContacts(data.contacts || data.data.contacts || []);
-          setLoading(false); // Set loading to false after fetching data
+          if (data) {
+            setContacts(data.contacts || data.data?.contacts || []);
+          }
         })
         .catch((err) => {
-          console.error("Failed to fetch contacts:", err);
-          setError(err.message);
-          setLoading(false);
+          setError("Failed to fetch contacts: " + err.message);
         });
     };
 
@@ -36,23 +37,18 @@ export const Home = () => {
   }, []);
 
   const handleDelete = (id) => {
-    // Call the delete action from your context or a direct fetch request
-    actions.deleteContact(id); // Make sure you have this action defined in your flux.js
-    setContacts(contacts.filter((contact) => contact.id !== id)); // Update local state after deletion
+    actions.deleteContact(id).then(() => {
+      setContacts((prevContacts) =>
+        prevContacts.filter((contact) => contact.id !== id)
+      );
+    });
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
 
   return (
     <div className="text-center mt-5">
       <h1>Contact List</h1>
-      <Link to="/AddContact" className="btn btn-primary mb-3">
+      <Link to="/add-contact" className="btn btn-primary mb-3">
         Add New Contact
       </Link>
       <div className="row">
@@ -61,13 +57,14 @@ export const Home = () => {
             <ContactCard
               key={contact.id}
               contact={contact}
-              onDelete={handleDelete} // Pass the delete handler
+              onDelete={handleDelete} 
             />
           ))
         ) : (
           <p>No contacts found.</p>
         )}
       </div>
+      {error && <p className="text-danger">Error: {error}</p>}
     </div>
   );
 };

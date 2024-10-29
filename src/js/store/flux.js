@@ -3,20 +3,16 @@
 const getState = ({ getStore, getActions, setStore }) => {
     return {
       store: {
-        contacts: [], // Initial state for contacts
+        contacts: [],
       },
       actions: {
-        // Fetch all contacts
+        
         getContacts: () => {
           fetch("https://playground.4geeks.com/contact/agendas/Joaquin95/contacts")
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error("Failed to fetch contacts");
-              }
-              return response.json();
-            })
+            .then((response) => response.ok ? response.json() : null)
             .then((data) => {
-              setStore({ contacts: data.contacts || [] });
+              if (data) setStore({ contacts: data.contacts || [] });
+              else console.error("Failed to fetch contacts");
             })
             .catch((error) => console.error("Error fetching contacts:", error));
         },
@@ -30,22 +26,19 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
             body: JSON.stringify(contact),
           })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error("Failed to add contact");
-            }
-            return response.json();
-          })
+          .then(response => response.ok ? response.json() : null)
           .then(data => {
-            // Optionally update the store after adding a contact
-            setStore((prevState) => ({
-              contacts: [...prevState.contacts, data],
-            }));
+            if (data) {
+              setStore((prevState) => ({
+                contacts: [...prevState.contacts, data],
+              }));
+            } else {
+              console.error("Failed to add contact");
+            }
           })
           .catch(error => console.error("Error adding contact:", error));
         },
   
-        // Update an existing contact
         updateContact: (id, updatedContact) => {
           fetch(`https://playground.4geeks.com/contact/${id}`, {
             method: "PUT",
@@ -54,19 +47,17 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
             body: JSON.stringify(updatedContact),
           })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error("Failed to update contact");
-            }
-            return response.json();
-          })
+          .then(response => response.ok ? response.json() : null)
           .then(data => {
-            // Update the contacts in the store
-            setStore((prevState) => ({
-              contacts: prevState.contacts.map(contact => 
-                contact.id === id ? data : contact
-              ),
-            }));
+            if (data) {
+              setStore((prevState) => ({
+                contacts: prevState.contacts.map(contact => 
+                  contact.id === id ? data : contact
+                ),
+              }));
+            } else {
+              console.error("Failed to update contact");
+            }
           })
           .catch(error => console.error("Error updating contact:", error));
         },
@@ -77,21 +68,18 @@ const getState = ({ getStore, getActions, setStore }) => {
             method: "DELETE",
           })
           .then(response => {
-            if (!response.ok) {
-              throw new Error("Failed to delete contact");
+            if (response.ok) {
+              setStore((prevState) => ({
+                contacts: prevState.contacts.filter(contact => contact.id !== id),
+              }));
+            } else {
+              console.error("Failed to delete contact");
             }
-            // Optionally update the store after deleting a contact
-            setStore((prevState) => ({
-              contacts: prevState.contacts.filter(contact => contact.id !== id),
-            }));
           })
-          .catch(err => {
-            console.error("Delete error:", err);
-          });
+          .catch(error => console.error("Error deleting contact:", error));
         },
       },
     };
   };
   
   export default getState;
-  
