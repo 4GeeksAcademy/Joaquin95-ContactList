@@ -1,42 +1,11 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Context } from "../store/appContext"; // Adjust the path as necessary
-import { useNavigate } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Context } from "../store/appContext";
+import { useNavigate, Link } from "react-router-dom";
 
 const AddContact = () => {
-  const { store, actions } = useContext(Context);
+  const { actions } = useContext(Context);
   const navigate = useNavigate();
-  const [contacts, setContacts] = useState([]);
   const [contact, setContact] = useState({ full_name: "", email: "", phone: "", address: "" });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  
-  useEffect(() => {
-    const fetchContacts = () => {
-      fetch("https://playground.4geeks.com/contact/agendas/Joaquin95/contacts")
-        .then((response) => {
-          if (!response.ok) {
-            setError("Network response was not ok");
-            setLoading(false);
-            return;
-          }
-          return response.json();
-        })
-        .then((data) => {
-          if (data) {
-            console.log("Fetched data:", data);
-            setContacts(data.contacts || data.data?.contacts || []);
-          }
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.error("Failed to fetch contacts:", err);
-          setError(err.message);
-          setLoading(false);
-        });
-    };
-
-    fetchContacts();
-  }, []);
 
   const handleChange = (e) => {
     setContact({ ...contact, [e.target.name]: e.target.value });
@@ -44,21 +13,27 @@ const AddContact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Implement the action to add a contact here
-    console.log("Contact added:", contact);
-    navigate("/contacts"); // Redirect to contacts list after adding
+    actions.addContact(contact)  // This will send the correct `contact` object format
+      .then(() => {
+        navigate("/"); // Redirect to contacts list after adding
+      })
+      .catch((err) => {
+        console.error("Failed to add contact:", err);
+        alert("Failed to add contact.");
+      });
   };
 
-
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="text-center mt-5">
+      <h2>Add a new contact</h2>
       <input 
         type="text" 
-        name="full_name" 
-        value={contact.full_name} 
+        name="name" 
+        value={contact.name} 
         onChange={handleChange} 
         placeholder="Full Name" 
         required 
+        className="form-control mb-3"
       />
       <input 
         type="email" 
@@ -67,6 +42,7 @@ const AddContact = () => {
         onChange={handleChange} 
         placeholder="Email" 
         required 
+        className="form-control mb-3"
       />
       <input 
         type="text" 
@@ -75,6 +51,7 @@ const AddContact = () => {
         onChange={handleChange} 
         placeholder="Phone" 
         required 
+        className="form-control mb-3"
       />
       <input 
         type="text" 
@@ -83,8 +60,14 @@ const AddContact = () => {
         onChange={handleChange} 
         placeholder="Address" 
         required 
+        className="form-control mb-3"
       />
-      <button type="submit">Add Contact</button>
+      <button type="submit" className="btn btn-primary">Save</button>
+      
+      {/* Back to contacts link */}
+      <div className="mt-3">
+        <Link to="/" className="text-decoration-none">or get back to contacts</Link>
+      </div>
     </form>
   );
 };

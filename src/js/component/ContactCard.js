@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext"; // Ensure you import the context
 
-const ContactCard = ({ contact }) => {
+const ContactCard = ({ contact, onDeleteSuccess }) => {
   const navigate = useNavigate();
   const { actions } = useContext(Context); // Get actions from context
 

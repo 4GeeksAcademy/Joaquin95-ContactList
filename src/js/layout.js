@@ -23,7 +23,6 @@ const Layout = () => {
 					<Navbar />
 					<Routes>
 						<Route path="/" element={<Home />} />
-						
 						<Route path="/update-contact/:id" element={<UpdateContact />} />
 						<Route path="/add-contact" element={<AddContact />} />
 					</Routes>

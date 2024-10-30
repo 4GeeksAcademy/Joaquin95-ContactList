@@ -8,7 +8,7 @@ const UpdateContact = () => {
   const { store, actions } = useContext(Context); // Get store and actions from context
   const navigate = useNavigate();
   const [contact, setContact] = useState({
-    name: "",
+    full_name: "",
     email: "",
     phone: "",
     address: "",
@@ -34,6 +34,7 @@ const UpdateContact = () => {
     e.preventDefault();
     actions.updateContact(contact.id, contact)
       .then(() => {
+        actions.getContacts();
         navigate("/");
       })
       .catch((err) => {
@@ -43,41 +44,45 @@ const UpdateContact = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="text-center mt-5">
       <h2>Update Contact</h2>
-      <input
-        type="text"
-        name="name"
-        placeholder="Name"
-        value={contact.name}
-        onChange={handleChange}
-        required
+      <input 
+        type="text" 
+        name="full_name" 
+        value={contact.full_name} 
+        onChange={handleChange} 
+        placeholder="Full Name" 
+        required 
+        className="form-control mb-3"
       />
-      <input
-        type="email"
-        name="email"
-        placeholder="Email"
-        value={contact.email}
-        onChange={handleChange}
-        required
+      <input 
+        type="email" 
+        name="email" 
+        value={contact.email} 
+        onChange={handleChange} 
+        placeholder="Email" 
+        required 
+        className="form-control mb-3"
       />
-      <input
-        type="text"
-        name="phone"
-        placeholder="Phone"
-        value={contact.phone}
-        onChange={handleChange}
-        required
+      <input 
+        type="text" 
+        name="phone" 
+        value={contact.phone} 
+        onChange={handleChange} 
+        placeholder="Phone" 
+        required 
+        className="form-control mb-3"
       />
-      <input
-        type="text"
-        name="address"
-        placeholder="Address"
-        value={contact.address}
-        onChange={handleChange}
-        required
+      <input 
+        type="text" 
+        name="address" 
+        value={contact.address} 
+        onChange={handleChange} 
+        placeholder="Address" 
+        required 
+        className="form-control mb-3"
       />
-      <button type="submit">Update Contact</button>
+      <button type="submit" className="btn btn-primary">Save</button>
     </form>
   );
 };
