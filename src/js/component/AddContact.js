@@ -13,13 +13,14 @@ const AddContact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    actions.addContact(contact)  // This will send the correct `contact` object format
+    console.log("Submitting contact:", contact);
+    actions.addContact(contact)
       .then(() => {
         navigate("/"); // Redirect to contacts list after adding
       })
       .catch((err) => {
         console.error("Failed to add contact:", err);
-        alert("Failed to add contact.");
+        alert(`Failed to add contact: ${err}`); // Show more detailed error to user
       });
   };
 
@@ -28,8 +29,8 @@ const AddContact = () => {
       <h2>Add a new contact</h2>
       <input 
         type="text" 
-        name="name" 
-        value={contact.name} 
+        name="full_name" 
+        value={contact.full_name} 
         onChange={handleChange} 
         placeholder="Full Name" 
         required 
@@ -64,7 +65,6 @@ const AddContact = () => {
       />
       <button type="submit" className="btn btn-primary">Save</button>
       
-      {/* Back to contacts link */}
       <div className="mt-3">
         <Link to="/" className="text-decoration-none">or get back to contacts</Link>
       </div>

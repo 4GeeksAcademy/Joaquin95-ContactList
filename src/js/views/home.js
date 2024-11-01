@@ -6,14 +6,19 @@ export const Home = () => {
   const { actions, store } = useContext(Context);
 
   useEffect(() => {
-    actions.getContacts(); // Fetch contacts once when component mounts
+    actions.getContacts();
   }, [actions]);
 
   const handleDelete = (id) => {
-    actions.deleteContact(id).then(() => {
-      actions.getContacts(); // Refresh contacts after deletion
+    actions.deleteContact(id)
+    .then(() => {
+      actions.getContacts(); 
+    })
+    .catch((error) => {
+      console.error("Failed to delete contact:", error);
+      alert("Failed to delete contact. Please try again.");
     });
-  };
+};
 
   return (
     <div className="text-center mt-5">
@@ -24,7 +29,7 @@ export const Home = () => {
             <ContactCard
               key={contact.id}
               contact={contact}
-              onDelete={handleDelete} // Pass handleDelete to ContactCard
+              onDelete={handleDelete}
             />
           ))
         ) : (

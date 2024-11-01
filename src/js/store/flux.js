@@ -15,11 +15,12 @@ const getState = ({ getStore, getActions, setStore }) => {
             return response.json();
           })
           .then((data) => {
-            setStore({ contacts: data }); // Assuming `data` contains the contacts list
+            console.log("Fetched contacts:", data);
+            setStore({ contacts: data });
           })
           .catch((error) => console.error("Error fetching contacts:", error));
       },
-      // Add a new contact
+      
       addContact: (contact) => {
         return fetch('https://playground.4geeks.com/contact/agendas/Joaquin95/contacts', {
           method: "POST",
@@ -30,15 +31,25 @@ const getState = ({ getStore, getActions, setStore }) => {
         })
           .then((response) => {
             if (!response.ok) {
-              console.error("Failed to add contact.");
-              return Promise.reject("Failed to add contact.");
+              return response.json().then((result) => {
+                console.error("Failed to add contact:", result);
+                return Promise.reject(result.message || "Failed to add contact.");
+              });
             }
             return response.json();
           })
+
           .then((data) => {
-            // Update contacts in the global store
-            setStore({ contacts: [...getStore().contacts, data] });
+            if (data && data.id) { 
+              setStore({ contacts: [...getStore().contacts, data] });
+            } else {
+              console.warn("Unexpected response structure:", data);
+            }
             return data;
+          })
+          .catch((error) => {
+            console.error("Error in addContact:", error);
+            alert("Failed to add contact.");
           });
       },
 
@@ -50,40 +61,37 @@ const getState = ({ getStore, getActions, setStore }) => {
           },
           body: JSON.stringify(updatedContact),
         })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Failed to update contact");
-            }
-            return response.json();
-          })
-          .then((data) => {
-            setStore((prevState) => ({
-              contacts: prevState.contacts.map((contact) =>
-                contact.id === id ? data : contact
-              ),
-            }));
+        .then((response) => {
+          if (!response.ok) throw new Error("Failed to update contact");
+          return response.json();
+        })
+        .then((data) => {
+          const store = getStore();
+          setStore({
+            contacts: store.contacts.map((contact) =>
+              contact.id === id ? data : contact
+            ),
           });
-      },
+        })
+        .catch((error) => console.error("Error updating contact:", error));
+    },
 
-      // Delete a contact
       deleteContact: (id) => {
         return fetch(`https://playground.4geeks.com/contact/${id}`, {
           method: "DELETE",
         })
-          .then((response) => {
-            if (!response.ok) throw new Error("Failed to delete contact");
-            // Update the store to remove the deleted contact
-            setStore((prevState) => ({
-              contacts: prevState.contacts.filter(
-                (contact) => contact.id !== id
-              ),
-            }));
-          })
-          .catch((error) => {
-            console.error("Error deleting contact:", error);
-            alert("Failed to delete contact. Please try again.");
+        .then((response) => {
+          if (!response.ok) throw new Error("Failed to delete contact");
+          const store = getStore();
+          setStore({
+            contacts: store.contacts.filter((contact) => contact.id !== id),
           });
-      },
+        })
+        .catch((error) => {
+          console.error("Error deleting contact:", error);
+          alert("Failed to delete contact. Please try again.");
+        });
+     },
     },
   };
 };

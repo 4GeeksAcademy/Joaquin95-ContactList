@@ -9,7 +9,7 @@ export const Navbar = () => {
       </Link>
       <div className="ml-auto">
         <Link to="/add-contact" className="btn btn-primary mb-3">
-          Add New Contct
+          Add New Contact
         </Link>
       </div>
     </nav>
