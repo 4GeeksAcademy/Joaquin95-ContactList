@@ -16,11 +16,11 @@ const AddContact = () => {
     console.log("Submitting contact:", contact);
     actions.addContact(contact)
       .then(() => {
-        navigate("/"); // Redirect to contacts list after adding
+        navigate("/");
       })
       .catch((err) => {
         console.error("Failed to add contact:", err);
-        alert(`Failed to add contact: ${err}`); // Show more detailed error to user
+        alert(`Failed to add contact: ${err}`);
       });
   };
 

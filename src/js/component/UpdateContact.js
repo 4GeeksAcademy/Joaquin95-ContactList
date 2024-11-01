@@ -1,11 +1,11 @@
 // UpdateContact.js
 import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Context } from "../store/appContext"; // Import the context
+import { Context } from "../store/appContext";
 
 const UpdateContact = () => {
-  const { id } = useParams(); // Get the contact ID from the URL
-  const { store, actions } = useContext(Context); // Get store and actions from context
+  const { id } = useParams();
+  const { store, actions } = useContext(Context);
   const navigate = useNavigate();
   const [contact, setContact] = useState({
     full_name: "",

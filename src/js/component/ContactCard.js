@@ -1,18 +1,18 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Context } from "../store/appContext"; // Ensure you import the context
+import { Context } from "../store/appContext";
 
 const ContactCard = ({ contact, onDeleteSuccess }) => {
   const navigate = useNavigate();
-  const { actions } = useContext(Context); // Get actions from context
+  const { actions } = useContext(Context); 
 
   const handleUpdate = () => {
     navigate(`/update-contact/${contact.id}`);
   };
 
   const handleDelete = () => {
-    // Confirm deletion before proceeding
-    const confirmed = window.confirm(`Are you sure you want to delete ${contact.full_name}?`); // Adjusted to match field name
+    
+    const confirmed = window.confirm(`Are you sure you want to delete ${contact.full_name}?`);
     if (confirmed) {
       actions.deleteContact(contact.id)
         .then(() => {
@@ -28,7 +28,7 @@ const ContactCard = ({ contact, onDeleteSuccess }) => {
   return (
     <div className="card mb-4">
       <div className="card-body">
-        <h5 className="card-title">{contact.full_name}</h5> {/* Changed to match field name */}
+        <h5 className="card-title">{contact.full_name}</h5> 
         <p className="card-text">Email: {contact.email}</p>
         <p className="card-text">Phone: {contact.phone}</p>
         <p className="card-text">Address: {contact.address}</p>

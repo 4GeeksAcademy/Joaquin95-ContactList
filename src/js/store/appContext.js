@@ -23,7 +23,7 @@ const injectContext = PassedComponent => {
 
 		useEffect(() => {
 			if (state.actions.loadSomeData) {
-				state.actions.loadSomeData(); // Example action to load data
+				state.actions.loadSomeData();
 			}
 		}, []); 
 
