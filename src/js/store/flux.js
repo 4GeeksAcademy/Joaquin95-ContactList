@@ -32,11 +32,11 @@ const getState = ({ getStore, getActions, setStore }) => {
         )
           .then((response) => {
             if (!response.ok) {
-              console.log(response,"Error adding contact")
+              console.log(response, "Error adding contact");
+            } else {
+              return response.json();
             }
-            else {
-            return response.json();
-      }})
+          })
 
           .then((data) => {
             return data;
@@ -46,25 +46,28 @@ const getState = ({ getStore, getActions, setStore }) => {
           });
       },
 
-      updateContact: (id, updatedContact) => {
-        return fetch(`https://playground.4geeks.com/contact/${id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedContact),
-        })
+      updateContact: (id, contact) => {
+        return fetch(
+          `https://playground.4geeks.com/contact/agendas/Joaquin95/contacts/${id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(contact),
+          }
+        )
           .then((response) => {
             if (!response.ok) throw new Error("Failed to update contact");
             return response.json();
           })
           .then((data) => {
             const store = getStore();
-            setStore({
-              contacts: store.contacts.map((contact) =>
-                contact.id === id ? data : contact
-              ),
-            });
+            // setStore({
+            //   contacts: store.contacts.map((contact) =>
+            //     contact.id === id ? data : contact
+            //   ),
+            // });
           })
           .catch((error) => console.error("Error updating contact:", error));
       },

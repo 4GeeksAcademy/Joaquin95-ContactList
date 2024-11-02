@@ -8,7 +8,7 @@ const UpdateContact = () => {
   const { store, actions } = useContext(Context);
   const navigate = useNavigate();
   const [contact, setContact] = useState({
-    full_name: "",
+    name: "",
     email: "",
     phone: "",
     address: "",
@@ -25,12 +25,12 @@ const UpdateContact = () => {
     }
   }, [id, store.contacts]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setContact({ ...contact, [name]: value });
+  const handleChange = (e, inputType) => {
+    setContact((prevContact) => ({ ...prevContact, [inputType]: e.target.value }));
   };
 
   const handleSubmit = (e) => {
+    console.log(contact, "handleSubmit")
     e.preventDefault();
     actions.updateContact(contact.id, contact)
       .then(() => {
@@ -48,9 +48,9 @@ const UpdateContact = () => {
       <h2>Update Contact</h2>
       <input 
         type="text" 
-        name="full_name" 
-        value={contact.full_name} 
-        onChange={handleChange} 
+        name="name" 
+        value={contact.name} 
+        onChange={(e) => handleChange(e, "name")} 
         placeholder="Full Name" 
         required 
         className="form-control mb-3"
@@ -59,7 +59,7 @@ const UpdateContact = () => {
         type="email" 
         name="email" 
         value={contact.email} 
-        onChange={handleChange} 
+        onChange={(e) => handleChange(e,"email")} 
         placeholder="Email" 
         required 
         className="form-control mb-3"
@@ -68,7 +68,7 @@ const UpdateContact = () => {
         type="text" 
         name="phone" 
         value={contact.phone} 
-        onChange={handleChange} 
+        onChange={(e) => handleChange(e,"phone")} 
         placeholder="Phone" 
         required 
         className="form-control mb-3"
@@ -77,7 +77,7 @@ const UpdateContact = () => {
         type="text" 
         name="address" 
         value={contact.address} 
-        onChange={handleChange} 
+        onChange={(e) => handleChange(e,"address")} 
         placeholder="Address" 
         required 
         className="form-control mb-3"
