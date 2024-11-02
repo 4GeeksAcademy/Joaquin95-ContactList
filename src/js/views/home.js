@@ -7,7 +7,7 @@ export const Home = () => {
 
   useEffect(() => {
     actions.getContacts();
-  }, [actions]);
+  }, []);
 
   const handleDelete = (id) => {
     actions.deleteContact(id)

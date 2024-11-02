@@ -28,7 +28,7 @@ const ContactCard = ({ contact, onDeleteSuccess }) => {
   return (
     <div className="card mb-4">
       <div className="card-body">
-        <h5 className="card-title">{contact.full_name}</h5> 
+        <h5 className="card-title">Name: {contact.full_name}</h5> 
         <p className="card-text">Email: {contact.email}</p>
         <p className="card-text">Phone: {contact.phone}</p>
         <p className="card-text">Address: {contact.address}</p>
