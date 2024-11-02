@@ -8,11 +8,11 @@ const UpdateContact = () => {
   const { store, actions } = useContext(Context);
   const navigate = useNavigate();
   const [contact, setContact] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    address: "",
-  });
+    name: store.editContactData.name,
+    email: store.editContactData.email,
+    phone: store.editContactData.phone,
+    address: store.editContactData.address
+  })
 
   const [error, setError] = useState(null);
 

@@ -4,6 +4,7 @@ const getState = ({ getStore, getActions, setStore }) => {
   return {
     store: {
       contacts: [],
+      editContactData: {}
     },
     actions: {
       getContacts: () => {
@@ -45,6 +46,10 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("Error in addContact:", error);
           });
       },
+
+      editContactData: (contactData) => {
+        setStore({editContactData:contactData})
+      }, 
 
       updateContact: (id, contact) => {
         return fetch(

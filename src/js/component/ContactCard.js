@@ -7,6 +7,7 @@ const ContactCard = ({ contact, onDeleteSuccess }) => {
   const { actions } = useContext(Context); 
 
   const handleUpdate = () => {
+    actions.editContactData(contact)
     navigate(`/update-contact/${contact.id}`);
   };
 
