@@ -14,7 +14,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           })
           .then((data) => {
             console.log("Fetched contacts:", data);
-            setStore({ contacts: data });
+            setStore({ contacts: data.contacts });
           })
           .catch((error) => console.error("Error fetching contacts:", error));
       },
@@ -39,11 +39,6 @@ const getState = ({ getStore, getActions, setStore }) => {
       }})
 
           .then((data) => {
-            if (data && data.id) {
-              setStore({ contacts: [...getStore().contacts, data] });
-            } else {
-              console.warn("Unexpected response structure:", data);
-            }
             return data;
           })
           .catch((error) => {

@@ -19,12 +19,12 @@ export const Home = () => {
       alert("Failed to delete contact. Please try again.");
     });
 };
-
+  console.log(store.contacts, "Testing contacts")
   return (
     <div className="text-center mt-5">
       <h1>Contact List</h1>
       <div className="row">
-        {store.contacts && store.contacts.length > 0 ? (
+        {store.contacts.length > 0 ? (
           store.contacts.map((contact) => (
             <ContactCard
               key={contact.id}
