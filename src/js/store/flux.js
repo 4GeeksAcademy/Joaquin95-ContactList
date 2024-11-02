@@ -7,8 +7,8 @@ const getState = ({ getStore, getActions, setStore }) => {
       editContactData: {}
     },
     actions: {
-      getContacts: () => {
-        fetch("https://playground.4geeks.com/contact/agendas/Joaquin95")
+      getContacts: async () => {
+        await fetch("https://playground.4geeks.com/contact/agendas/Joaquin95")
           .then((response) => {
             if (!response.ok) throw new Error("Failed to fetch contacts");
             return response.json();
@@ -78,19 +78,18 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
 
       deleteContact: (id) => {
-        return fetch(`https://playground.4geeks.com/contact/${id}`, {
+        return fetch(`https://playground.4geeks.com/contact/agendas/Joaquin95/contacts/${id}`, {
           method: "DELETE",
         })
           .then((response) => {
             if (!response.ok) throw new Error("Failed to delete contact");
             const store = getStore();
             setStore({
-              contacts: store.contacts.filter((contact) => contact.id !== id),
-            });
+              contacts: store.contacts.filter((contact) => contact.id != id )
+            })
           })
           .catch((error) => {
             console.error("Error deleting contact:", error);
-            alert("Failed to delete contact. Please try again.");
           });
       },
     },

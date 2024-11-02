@@ -2,22 +2,24 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 
-const ContactCard = ({ contact, onDeleteSuccess }) => {
+const ContactCard = ({ contact }) => {
   const navigate = useNavigate();
-  const { actions } = useContext(Context); 
+  const { actions } = useContext(Context);
 
   const handleUpdate = () => {
-    actions.editContactData(contact)
+    actions.editContactData(contact);
     navigate(`/update-contact/${contact.id}`);
   };
 
   const handleDelete = () => {
-    
-    const confirmed = window.confirm(`Are you sure you want to delete ${contact.full_name}?`);
+    const confirmed = window.confirm(
+      `Are you sure you want to delete ${contact.name}?`
+    );
     if (confirmed) {
-      actions.deleteContact(contact.id)
+      actions.deleteContact(contact.id);
+      actions.getContacts()
         .then(() => {
-          alert(`${contact.full_name} has been deleted.`);
+          alert(`${contact.name} has been deleted.`);
         })
         .catch((err) => {
           console.error("Delete error:", err);
@@ -29,7 +31,7 @@ const ContactCard = ({ contact, onDeleteSuccess }) => {
   return (
     <div className="card mb-4">
       <div className="card-body">
-        <h5 className="card-title">Name: {contact.name}</h5> 
+        <h5 className="card-title">Name: {contact.name}</h5>
         <p className="card-text">Email: {contact.email}</p>
         <p className="card-text">Phone: {contact.phone}</p>
         <p className="card-text">Address: {contact.address}</p>

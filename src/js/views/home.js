@@ -9,17 +9,6 @@ export const Home = () => {
     actions.getContacts();
   }, []);
 
-  const handleDelete = (id) => {
-    actions.deleteContact(id)
-    .then(() => {
-      actions.getContacts(); 
-    })
-    .catch((error) => {
-      console.error("Failed to delete contact:", error);
-      alert("Failed to delete contact. Please try again.");
-    });
-};
-  console.log(store.contacts, "Testing contacts")
   return (
     <div className="text-center mt-5">
       <h1>Contact List</h1>
@@ -29,7 +18,6 @@ export const Home = () => {
             <ContactCard
               key={contact.id}
               contact={contact}
-              onDelete={handleDelete}
             />
           ))
         ) : (
